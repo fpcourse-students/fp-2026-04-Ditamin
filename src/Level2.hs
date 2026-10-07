@@ -19,9 +19,9 @@ import TypeCheck (Todo)
 -- Оттранслируйте в Haskell варианты в стиле чистого λ-исчисления (по Чёрчу): термы inl,
 -- inr и either. Имя either в Haskell занято стандартной функцией, ваша называется eitherChurch.
 
-inl = todo "2.1 inl"
-inr = todo "2.1 inr"
-eitherChurch = todo "2.1 eitherChurch"
+inl = \x f _ -> f x
+inr = \x _ g -> g x
+eitherChurch = \f g x -> x f g
 
 
 -- 2.2. Предыдущее число

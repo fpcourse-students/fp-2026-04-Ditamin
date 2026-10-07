@@ -20,9 +20,9 @@ import TypeCheck (Todo)
 -- ваши называются fstChurch и sndChurch.
 -- Ознакомьтесь с тем, как это задание тестируется в test/SpecLevel1.hs.
 
-pair = todo "1.1 pair"
-fstChurch = todo "1.1 fstChurch"
-sndChurch = todo "1.1 sndChurch"
+pair = \x y f -> f x y
+fstChurch = \p -> p \x _ -> x
+sndChurch = \p -> p \_ y -> y
 
 
 -- 1.2. Взаимная рекурсия
@@ -37,10 +37,16 @@ sndChurch = todo "1.1 sndChurch"
 -- При реализации используйте охранные выражения (guards, см. лекцию).
 
 isEven :: Integer -> Bool
-isEven = todo "1.2 isEven"
+isEven n
+  | n == 0 = True
+  | n < 0 = isOdd(n + 1)
+  | n > 0 = isOdd(n - 1)
 
 isOdd :: Integer -> Bool
-isOdd = todo "1.2 isOdd"
+isOdd n
+  | n == 0 = False
+  | n < 0 = isEven(n + 1)
+  | n > 0 = isEven(n - 1)
 
 
 -- 1.3. Найдите ошибку
@@ -57,7 +63,7 @@ facBuggy n = go n (n - 1)
       | otherwise = go (acc * n') (n' - 1)
 
 counterexample :: Integer
-counterexample = todo "1.3"
+counterexample = 0
 
 
 -- 1.4. Рекуррентная последовательность
@@ -67,7 +73,11 @@ counterexample = todo "1.3"
 -- Постарайтесь сделать так, чтобы ваша функция работала за линейное время.
 
 itemAt :: Integer -> Integer
-itemAt = todo "1.4"
+itemAt n = go 1 2 3 n
+  where
+    go k0 k1 k2 n'
+      | n' == 0 = k0
+      | otherwise = go k1 k2 (k2 - 2*k1 + 3*k0) (n'-1)
 
 
 -- 1.5. Цифры числа
@@ -77,7 +87,12 @@ itemAt = todo "1.4"
 -- последним действием. Используйте параметры-аккумуляторы.
 
 nSumDigits :: Integer -> (Integer, Integer)
-nSumDigits = todo "1.5"
+nSumDigits n = if n == 0 then (1, 0) else go 0 0 (abs n)
+  where
+    go cnt sum n'
+      | n' == 0 = (cnt, sum)
+      | otherwise = go (cnt + 1) (sum + mod n' 10) (div n' 10)
+
 
 
 -- 1.6. Предскажите тип
@@ -88,13 +103,13 @@ nSumDigits = todo "1.5"
 -- Сначала запишите ответ, и только потом сверьтесь с интерпретатором командой :t.
 
 -- uncurry const
-typeOfUncurryConst :: Todo
+typeOfUncurryConst :: (a, b) -> a
 typeOfUncurryConst = undefined
 
 -- curry fst
-typeOfCurryFst :: Todo
+typeOfCurryFst :: a -> b -> a
 typeOfCurryFst = undefined
 
 -- flip (,)
-typeOfFlipPair :: Todo
+typeOfFlipPair :: a -> b -> (b,a)
 typeOfFlipPair = undefined
